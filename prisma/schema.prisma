@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+model User {
+  Id_user          Int      @id @default(autoincrement())
+  FirstNames_user  String
+  LastNames_user   String
+  Email_user       String  @unique 
+  Password_user    String
+  ImgProfile_user  String
+  DateCreated_user DateTime @default(now())
+  DateModified_user DateTime @updatedAt
+
+  // Define la relación con la tabla Rol
+  rol              Rol?    // Un usuario puede tener un rol (opcional)
+  // One-to-Many relationship with Publish
+  publishes Publish[]
+}
+
+model Rol {
+  Id_rol      Int     @id @default(autoincrement())
+  Id_user_FK  Int     @unique
+  Name_rol    String  @default("user")
+  user        User    @relation(fields: [Id_user_FK], references: [Id_user])
+}
+
+
+model Publish {
+ id_p        Int      @id @default(autoincrement())
+  userId    Int
+  Title_p String
+ Content_p  String
+  Img_p   String
+  coment Coment[]  
+  DateCreated_p DateTime @default(now())
+  user User   @relation(fields: [userId], references: [Id_user])
+
+  @@index(userId)
+}
+
+
+model Coment {
+  Id_c        Int      @id @default(autoincrement())
+   Id_p_FK  Int
+   Content_c String
+     DateCreated_c DateTime @default(now())
+   publish  Publish  @relation(fields: [ Id_p_FK], references: [id_p])
+
+}
+
+
+
