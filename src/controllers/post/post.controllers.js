@@ -30,7 +30,7 @@ const publishCreate = async (req, res) => {
     // Efficiently create publish and handle image upload if applicable
     const newPublish = await prisma.publish.create({
       data: {
-        userId: id,
+        Id_u_FK : id,
         Title_p: title,
         Content_p: content,
         Img_p: urlImage ? urlImage.url : null, // Handle image path if uploaded

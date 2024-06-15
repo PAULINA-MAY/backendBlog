@@ -5,11 +5,11 @@ const tokenSing = async (results) =>{
     return jwt.sign(
          {
             _id: results.Id_user,
-            _rol : results.Rol,
-            _img : results.Img,
-            _email : results.Email,
-            _nombres : results.Nombres,
-            _apellidos : results.Apellidos,
+            _rol : results.rol.Name_rol,
+            _email : results. Email_user,
+            _nombres : results.FirstNames_user,
+            _apellidos : results.LastNames_user,
+            _img : results.ImgProfile_user,
          },
          config.jwt_secret ,
          {

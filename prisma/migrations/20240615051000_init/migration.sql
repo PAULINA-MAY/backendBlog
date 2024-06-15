@@ -26,13 +26,13 @@ CREATE TABLE `Rol` (
 -- CreateTable
 CREATE TABLE `Publish` (
     `id_p` INTEGER NOT NULL AUTO_INCREMENT,
-    `userId` INTEGER NOT NULL,
+    `Id_u_FK` INTEGER NOT NULL,
     `Title_p` VARCHAR(191) NOT NULL,
     `Content_p` VARCHAR(191) NOT NULL,
     `Img_p` VARCHAR(191) NOT NULL,
     `DateCreated_p` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
-    INDEX `Publish_userId_idx`(`userId`),
+    INDEX `Publish_Id_u_FK_idx`(`Id_u_FK`),
     PRIMARY KEY (`id_p`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -50,7 +50,7 @@ CREATE TABLE `Coment` (
 ALTER TABLE `Rol` ADD CONSTRAINT `Rol_Id_user_FK_fkey` FOREIGN KEY (`Id_user_FK`) REFERENCES `User`(`Id_user`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Publish` ADD CONSTRAINT `Publish_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`Id_user`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Publish` ADD CONSTRAINT `Publish_Id_u_FK_fkey` FOREIGN KEY (`Id_u_FK`) REFERENCES `User`(`Id_user`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Coment` ADD CONSTRAINT `Coment_Id_p_FK_fkey` FOREIGN KEY (`Id_p_FK`) REFERENCES `Publish`(`id_p`) ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -49,48 +49,58 @@ const registerUser = async (req, res) => {
 }
 
 const login = async (req, res) => {
-    try {
-      const { email, password } = req.body;
-  
-    
-      const user = await prisma.user.findUnique({
-        where: { Email_user: email }, 
-        select : {     Id_user : true,    Email_user : true, Password_user: true }
+  try {
+    const { email, password } = req.body;
+
+    const user = await prisma.user.findUnique({
+      where: { Email_user: email },
+      select: {
+        Id_user: true,
+        Email_user: true,
+        FirstNames_user: true,
+        LastNames_user: true,
+        Password_user   : true,
+        ImgProfile_user: true,
+        // Include the necessary fields from the Rol model (adjust as needed)
+        rol: {
+          select: { Name_rol: true }, // Choose specific fields from Rol
+        },
+      },
+    });
+
+    if (!user) {
+      return res.status(409).json({
+        status: 409,
+        message: 'No se encontraron datos para este usuario.',
       });
-      
-  
-      if (!user) {
-        return res.status(409).json({
-          status: 409,
-          message: 'No se encontraron datos para este usuario.',
-        });
-      }
-  
-      const checkPassword = await compare(password, user.Password_user);
-      if (!checkPassword) {
-        return res.status(409).json({
-          status: 409,
-          message: 'La contraseña proporcionada es incorrecta.',
-        });
-      }
-  
-      const tokenSession = await tokenSing(user);
-      res.cookie('token', tokenSession, { httpOnly: true });
-  
-      // Omit password from response data
-      const { Password_user, ...userData } = user;
-  
-      return res.status(200).json({
-        status: 200,
-        message: 'Inicio de sesión exitoso.',
-        token: tokenSession,
-        data: userData,
-      });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Error interno del servidor.' });
     }
-  };
+
+    const checkPassword = await compare(password, user.Password_user);
+    if (!checkPassword) {
+      return res.status(409).json({
+        status: 409,
+        message: 'La contraseña proporcionada es incorrecta.',
+      });
+    }
+
+    const tokenSession = await tokenSing(user);
+    res.cookie('token', tokenSession, { httpOnly: true });
+
+  
+    const { Password_user, ...userData } = user;
+
+    return res.status(200).json({
+      status: 200,
+      message: 'Inicio de sesión exitoso.',
+      token: tokenSession,
+      data: user,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Error interno del servidor.' });
+  }
+};
+
   
   
 

@@ -40,15 +40,15 @@ model Rol {
 
 model Publish {
  id_p        Int      @id @default(autoincrement())
-  userId    Int
+  Id_u_FK   Int
   Title_p String
  Content_p  String
   Img_p   String
   coment Coment[]  
   DateCreated_p DateTime @default(now())
-  user User   @relation(fields: [userId], references: [Id_user])
+  user User   @relation(fields: [Id_u_FK], references: [Id_user])
 
-  @@index(userId)
+  @@index(Id_u_FK)
 }
 
 
