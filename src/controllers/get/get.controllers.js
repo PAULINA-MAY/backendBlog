@@ -5,27 +5,27 @@ const getAllPublishes = async (req, res) => {
   try {
     const publishes = await prisma.publish.findMany({
       include: {
-        user: { // Include user details for each publish
+        user: { 
           select: {
             FirstNames_user: true,
             LastNames_user: true,
             ImgProfile_user: true,
           },
         },
-        coment: { // Include comments for each publish
-          select: { // Optionally select specific comment fields
+        coment: { 
+          select: { 
             Id_c: true,
-            Content_c: true, // Include comment content
-            DateCreated_c: true, // Include comment creation date
+            Content_c: true, 
+            DateCreated_c: true, 
           },
         },
       },
       orderBy: {
-        DateCreated_p: 'desc', // Order by publish creation date descending
+        DateCreated_p: 'desc', 
       },
     });
 
-    // Format data as needed
+
     const formattedPublishes = publishes.map(publish => ({
       postId: publish.id_p,
       userId: publish.user.Id_user,
@@ -68,25 +68,48 @@ const getPublishesByUserId = async (req, res) => {
      
       const publishes = await prisma.publish.findMany({
         where: {
-          userId: id, // Filter by user ID
+          Id_u_FK : id, 
         },
         include: {
-          coment: { // Include comments for each publish
-            select: { // Optionally select specific comment fields
-              Content_c: true, // Include comment content
-              DateCreated_c: true, // Include comment creation date
+          user: { 
+            select: {
+              FirstNames_user: true,
+              LastNames_user: true,
+              ImgProfile_user: true,
+            },
+          },
+          coment: { 
+            select: { 
+              Content_c: true, 
+              DateCreated_c: true, 
             },
           },
         },
       });
+      const formattedPublishes = publishes.map(publish => ({
+        postId: publish.id_p,
+        userId: publish.user.Id_user,
+        userName: `${publish.user.FirstNames_user} ${publish.user.LastNames_user}`,
+        userAvatar: publish.user.ImgProfile_user,
+        title: publish.Title_p,
+        content: publish.Content_p,
+        imageUrl: publish.Img_p,
+        publicationDate: publish.DateCreated_p,
+        comments: publish.coment.map(comment => ({
+          commentId: comment.Id_c,
+          commentContent: comment.Content_c,
+          commentDate: comment.DateCreated_c,
+        })),
+      }));
   
-      res.status(200).json({ message: 'Publishes retrieved successfully', data: publishes });
+      res.status(200).json(formattedPublishes);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Internal Server Error' });
     }
   };
  
+
   
 
 

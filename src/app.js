@@ -7,11 +7,9 @@ var cors = require('cors')
 import auth from './routes/auth/auth.routes'
 import post from './routes/post/post.routes'
 import get from  './routes/get/get.routes'
-/* 
-
-import post from './routes/post/post.routes'
 import deleted from'./routes/delete/delete.routes'
-import update from './routes/put/put.routes' */
+import update from './routes/put/put.routes'
+
 
 const app=express();
 app.use(cors())
@@ -27,11 +25,9 @@ app.use(express.json())
 app.use("/api/auth", auth );
 app.use("/api/post", post);
 app.use("/api/get", get);
-/* app.use("/api/auth", auth );
-app.use("/api/get", get);
-app.use("/api/post", post);
 app.use("/api/delete", deleted);
-app.use("/api/put", update) ; */
+app.use("/api/put", update) ;
+
 
 ///Route ViewImages
 /* app.use("/public", express.static('C:/Home/API-PROYECTO/src/images'))
